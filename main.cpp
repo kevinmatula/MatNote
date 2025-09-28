@@ -4,6 +4,9 @@
 
 // This is a function that is called every time a user tries to resize window
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+// This is a function that is called on every tick to check if input was
+// provided.
+void processInput(GLFWwindow *window);
 
 const unsigned int SCREEN_WIDTH = 800;
 const unsigned int SCREEN_HEIGHT = 600;
@@ -42,10 +45,20 @@ int main() {
 
   // This while loop is also called the render loop, controls rendering.
   while (!glfwWindowShouldClose(window)) {
+
+    processInput(window);
+
+    // We want to clear the screen each frame
+    // Clear color buffer using glClear, then color buffer filled with the color
+    // configured by glClearColor!
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
     // Swaps the color buffer and show it as output to the screen
     // I think this works by being a double buffer, as in something is always
     // drawn to the screen to reduce flickering
     glfwSwapBuffers(window);
+
     // Checks if any events are triggered, and updates the window state
     // by calling corresponding functions (that are registered via clalback
     // methods)
@@ -56,6 +69,13 @@ int main() {
   return 0;
 }
 
+// This method deals with window resizing
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
+}
+
+// This function deals with input processing
+void processInput(GLFWwindow *window) {
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    glfwSetWindowShouldClose(window, true);
 }
